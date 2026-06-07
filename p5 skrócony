@@ -1,0 +1,26 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.23;
+
+contract EmployeeStorage {
+    // SLOT 0: Spakowane zmienne (łącznie 5 z 32 bajtów)
+    uint24 private salary = 50000;
+    uint16 private shares = 1000;
+
+    // SLOT 1 i SLOT 2
+    uint256 public idNumber = 112358132134; 
+    string public name = "Pat";
+
+    function grantShares(uint16 _newShares) external {
+        require(uint32(shares) + _newShares <= 5000, "Limit 5000");
+        shares += _newShares;
+    }
+
+    // Zwraca spakowany SLOT 0 w czytelnym formacie HEX
+    function checkSlotZero() external view returns (bytes32 result) {
+        assembly { result := sload(0) }
+    }
+
+    function viewEmployeeData() external view returns (uint24, uint16) {
+        return (salary, shares);
+    }
+}
